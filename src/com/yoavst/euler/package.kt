@@ -20,5 +20,6 @@ fun CharArray.swap(i1: Int, i2: Int) {
 
 fun String.isPalindrome() = this == reversed()
 
-fun String.isPandigital(n: Int): Boolean = length == n && '0' !in this && ('1'..('1' + (n-1))).all { it in this }
+fun String.isPandigital(n: Int): Boolean = length == n && '0' !in this && ('1'..('1' + (n - 1))).all { it in this }
+fun String.isFullPandigital(): Boolean = length == 10 && ('0'..'9').all { it in this }
 

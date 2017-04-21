@@ -2,6 +2,7 @@ package com.yoavst.euler
 
 import kotlin.coroutines.experimental.buildSequence
 
+fun Long.abs(): Long = Math.abs(this)
 fun Long.sqrt(): Long = Math.sqrt(toDouble()).toLong()
 fun Long.square(): Long = this * this
 fun Long.pow(num: Long): Long = Math.pow(this.toDouble(), num.toDouble()).toLong()
@@ -44,7 +45,7 @@ private fun Long.isPrimeNoCache(): Boolean {
     return (3..sqrt() step 2).none { this % it == 0L }
 }
 
-private const val MaxPrimeCacheValue = 2_000_000
+private const val MaxPrimeCacheValue = 2_000_000L
 private val PrimeCache = (sequenceOf(2L) + (3L..MaxPrimeCacheValue step 2).asSequence()).filter(Long::isPrimeNoCache).toList().toLongArray()
 
 fun Long.isPrime(): Boolean {
@@ -81,6 +82,23 @@ fun Long.digits(): Sequence<Int> {
     }
 }
 
+fun Long.primeFactors(): Sequence<Long> {
+    if (this == 1L) return emptySequence()
+    else if (isPrime()) return sequenceOf(this)
+
+    return buildSequence {
+        var num = this@primeFactors
+        for (prime in primesSequence) {
+            if (prime > num) break
+            while (num % prime == 0L) {
+                yield(prime)
+                num /= prime
+            }
+            if (num == 1L) break
+        }
+    }
+}
+
 fun Iterable<Long>.multiple() = fold(1L, Long::times)
 fun Sequence<Long>.multiple() = fold(1L, Long::times)
 
@@ -88,6 +106,7 @@ fun Sequence<Long>.multiple() = fold(1L, Long::times)
 //region Int support
 fun Int.sqrt() = toLong().sqrt().toInt()
 
+fun Int.abs(): Int = Math.abs(this)
 fun Int.square() = toLong().square().toInt()
 fun Int.pow(num: Int) = toLong().pow(num.toLong()).toInt()
 fun Int.reversed() = toLong().reversed().toInt()
@@ -101,6 +120,7 @@ fun Int.isPandigital(n: Int) = toLong().isPandigital(n)
 
 fun Int.divisors() = toLong().divisors().map(Long::toInt)
 fun Int.digits() = toLong().digits()
+fun Int.primeFactors() = toLong().primeFactors().map(Long::toInt)
 
 @JvmName("multipleInt")
 fun Iterable<Int>.multiple() = fold(1L, Long::times)
@@ -108,3 +128,16 @@ fun Iterable<Int>.multiple() = fold(1L, Long::times)
 @JvmName("multipleInt")
 fun Sequence<Int>.multiple() = fold(1L, Long::times)
 //endregion
+
+val primesSequence = buildSequence<Long> {
+    for (number in PrimeCache)
+        yield(number)
+
+    var num = MaxPrimeCacheValue
+    if (num.isEven()) num += 1
+    while (true) {
+        if (num.isPrime())
+            yield(num)
+        num += 2
+    }
+}
