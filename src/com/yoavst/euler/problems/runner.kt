@@ -4,6 +4,6 @@ import kotlin.system.measureTimeMillis
 
 fun main(args: Array<String>) {
     println("Time taken: " + measureTimeMillis {
-        problem48()
+        problem50()
     } + "ms")
 }

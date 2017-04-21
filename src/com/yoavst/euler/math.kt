@@ -35,6 +35,14 @@ fun Long.isEven() = this % 2 == 0L
 fun Long.isOdd() = !isEven()
 fun Long.isPalindrome() = this == reversed()
 fun Long.isPandigital(n: Int) = toString().isPandigital(n)
+fun Long.isPermutationOf(num: Long): Boolean {
+    if (this == num) return true
+    val arr1 = num.toString().toCharArray()
+    arr1.sort()
+    val arr2 = toString().toCharArray()
+    arr2.sort()
+    return arr1 contentEquals arr2
+}
 
 //region isPrime
 private fun Long.isPrimeNoCache(): Boolean {
@@ -104,9 +112,9 @@ fun Sequence<Long>.multiple() = fold(1L, Long::times)
 
 
 //region Int support
-fun Int.sqrt() = toLong().sqrt().toInt()
-
 fun Int.abs(): Int = Math.abs(this)
+
+fun Int.sqrt() = toLong().sqrt().toInt()
 fun Int.square() = toLong().square().toInt()
 fun Int.pow(num: Int) = toLong().pow(num.toLong()).toInt()
 fun Int.reversed() = toLong().reversed().toInt()
@@ -117,6 +125,7 @@ fun Int.isOdd() = !isEven()
 fun Int.isPrime() = toLong().isPrime()
 fun Int.isPalindrome() = toLong().isPalindrome()
 fun Int.isPandigital(n: Int) = toLong().isPandigital(n)
+fun Int.isPermutationOf(num: Int) = toLong().isPermutationOf(num.toLong())
 
 fun Int.divisors() = toLong().divisors().map(Long::toInt)
 fun Int.digits() = toLong().digits()
