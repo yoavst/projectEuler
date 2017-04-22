@@ -5,7 +5,16 @@ import kotlin.coroutines.experimental.buildSequence
 fun Long.abs(): Long = Math.abs(this)
 fun Long.sqrt(): Long = Math.sqrt(toDouble()).toLong()
 fun Long.square(): Long = this * this
-fun Long.pow(num: Long): Long = Math.pow(this.toDouble(), num.toDouble()).toLong()
+fun Long.pow(num: Long): Long {
+    var n = num
+    var sum = 1L
+    while (n > 0) {
+        sum *= this
+        n--
+    }
+    return sum
+}
+
 fun Long.reversed(): Long {
     var result = 0L
     var num = this
@@ -22,7 +31,7 @@ private fun Long.factorialNoCache() = factorialNoCacheFrom(1, 1)
 
 private fun Long.factorialNoCacheFrom(x: Int, result: Long) = (x..this).fold(result, Long::times)
 
-private val FactorialCache = LongArray(20) { it.toLong().factorialNoCache() }
+private val FactorialCache = generateLongArray(100, 1, 10::times)
 fun Long.factorial(): Long {
     if (this < FactorialCache.size)
         return FactorialCache[this.toInt()]
@@ -44,26 +53,6 @@ fun Long.isPermutationOf(num: Long): Boolean {
     return arr1 contentEquals arr2
 }
 
-//region isPrime
-private fun Long.isPrimeNoCache(): Boolean {
-    if (this <= 1) return false
-    else if (this == 2L) return true
-    else if (this % 2 == 0L) return false
-
-    return (3..sqrt() step 2).none { this % it == 0L }
-}
-
-private const val MaxPrimeCacheValue = 2_000_000L
-private val PrimeCache = (sequenceOf(2L) + (3L..MaxPrimeCacheValue step 2).asSequence()).filter(Long::isPrimeNoCache).toList().toLongArray()
-
-fun Long.isPrime(): Boolean {
-    if (this < MaxPrimeCacheValue)
-        return PrimeCache.binarySearch(this) >= 0
-    else
-        return isPrimeNoCache()
-}
-//endregion
-
 fun Long.divisors(): Sequence<Long> {
     if (this <= 1) return sequenceOf(1)
     else if (this == 2L) return sequenceOf(1, 2)
@@ -77,6 +66,24 @@ fun Long.divisors(): Sequence<Long> {
                 yield(i)
         }
     }
+}
+
+@Suppress("LoopToCallChain")
+fun Long.divisorsCount(): Int {
+    var nod = 0
+    val sqrt = this.sqrt()
+
+    for (i in 1..sqrt) {
+        if (this % i == 0L) {
+            nod += 2
+        }
+    }
+
+    if (sqrt * sqrt == this) {
+        nod--
+    }
+
+    return nod
 }
 
 fun Long.digits(): Sequence<Int> {
@@ -110,6 +117,16 @@ fun Long.primeFactors(): Sequence<Long> {
 fun Iterable<Long>.multiple() = fold(1L, Long::times)
 fun Sequence<Long>.multiple() = fold(1L, Long::times)
 
+fun CharArray.toLong(): Long {
+    var multiplier = 1
+    var sum = 0L
+    for (i in (size - 1) downTo 0) {
+        sum += multiplier * this[i].toIntValue()
+        multiplier *= 10
+    }
+    return sum
+}
+
 
 //region Int support
 fun Int.abs(): Int = Math.abs(this)
@@ -122,12 +139,12 @@ fun Int.factorial() = toLong().factorial().toInt()
 
 fun Int.isEven() = toLong().isEven()
 fun Int.isOdd() = !isEven()
-fun Int.isPrime() = toLong().isPrime()
 fun Int.isPalindrome() = toLong().isPalindrome()
 fun Int.isPandigital(n: Int) = toLong().isPandigital(n)
 fun Int.isPermutationOf(num: Int) = toLong().isPermutationOf(num.toLong())
 
 fun Int.divisors() = toLong().divisors().map(Long::toInt)
+fun Int.divisorsCount() = toLong().divisorsCount()
 fun Int.digits() = toLong().digits()
 fun Int.primeFactors() = toLong().primeFactors().map(Long::toInt)
 
@@ -136,17 +153,6 @@ fun Iterable<Int>.multiple() = fold(1L, Long::times)
 
 @JvmName("multipleInt")
 fun Sequence<Int>.multiple() = fold(1L, Long::times)
+
+fun CharArray.toInt() = toLong().toInt()
 //endregion
-
-val primesSequence = buildSequence<Long> {
-    for (number in PrimeCache)
-        yield(number)
-
-    var num = MaxPrimeCacheValue
-    if (num.isEven()) num += 1
-    while (true) {
-        if (num.isPrime())
-            yield(num)
-        num += 2
-    }
-}

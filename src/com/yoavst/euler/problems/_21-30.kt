@@ -14,15 +14,14 @@ import kotlin.coroutines.experimental.buildSequence
  * Evaluate the sum of all the amicable numbers under 10000.
  */
 fun problem21() {
-    val divisorsSum = (2..10000).map { it.toLong().divisors().sum().toInt() - it }.toIntArray()
-
+    val divisorsSum = IntArray(10000) { it.divisors().sum() - it }
     var sum = 0
-    for (num in 2..10000) {
-        val value = divisorsSum[num - 2]
+    for (num in 2 until 10000) {
+        val value = divisorsSum[num]
         if (value == 0 || value == num)
             continue
 
-        val otherValue = divisorsSum.getOrElse(value - 2) { 0 }
+        val otherValue = divisorsSum.getOrElse(value) { 0 }
         if (otherValue == num) {
             sum += value + otherValue
         }
@@ -61,7 +60,7 @@ fun problem22() {
  */
 @Suppress("LoopToCallChain")
 fun problem23() {
-    val abundantNumbers = (12..28123).filter { it.toLong().divisors().sum() - it > it }.toIntArray()
+    val abundantNumbers = (12..28123).filter { it.divisors().sum() - it > it }.toIntArray()
 
     val limit = 28123
     val numbers = BooleanArray(limit + 1)
@@ -126,7 +125,7 @@ fun problem24V2() {
         }
     }
 
-    print(result)
+    println(result)
 }
 
 /**

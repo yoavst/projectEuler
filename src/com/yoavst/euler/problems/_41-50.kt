@@ -49,7 +49,7 @@ fun problem41() {
 
  */
 fun problem42() {
-    val triangles = (1..30).map { n -> n * (n + 1) / 2 }.toIntArray()
+    val triangles = IntArray(30) { n -> n * (n + 1) / 2 }
     val count = resourceOf("p042_words.txt").readText().split(',').asSequence().map { it.substring(1, it.length - 1) }
             .map { it.sumBy { it - 'A' + 1 } }.count { triangles.binarySearch(it) >= 0 }
 
@@ -104,7 +104,7 @@ fun problem43() {
  * for which their sum and difference are pentagonal and D = |Pk − Pj| is minimised; what is the value of D?
  */
 fun problem44() {
-    val numbers = (1L..10000).map { n -> n * (3 * n - 1) / 2 }.toLongArray()
+    val numbers = LongArray(10000) { n -> (n.toLong() * (3 * n - 1) / 2) }
     var minimalDiff = Long.MAX_VALUE
 
     for (a in numbers) {

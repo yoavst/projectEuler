@@ -66,12 +66,8 @@ fun problem4() {
  */
 fun problem5() {
     val numbers = (2..20)
-    for (num in 2520..Int.MAX_VALUE step 20) {
-        if (numbers.all { num % it == 0 }) {
-            println(num)
-            break
-        }
-    }
+    val result = firstInt(from = 2520, step = 20) { num -> numbers.all { num % it == 0 } }
+    println(result)
 }
 
 /**
@@ -167,6 +163,6 @@ fun problem9() {
  * Find the sum of all the primes below two million.
  */
 fun problem10() {
-    val sum = 2 + (3..2_000_000 step 2).asSequence().filter(Int::isPrime).map(Int::toLong).sum()
+    val sum = 2 + generatePrimes(2_000_000).sum()
     println(sum)
 }

@@ -2,10 +2,7 @@
 
 package com.yoavst.euler.problems
 
-import com.yoavst.euler.divisors
-import com.yoavst.euler.isEven
-import com.yoavst.euler.multiple
-import com.yoavst.euler.toIntValue
+import com.yoavst.euler.*
 import java.math.BigInteger
 import kotlin.coroutines.experimental.buildSequence
 
@@ -87,7 +84,7 @@ fun problem12() {
     }
 
 
-    val num = triangleNumbers.first { it.divisors().count() > 500 }
+    val num = triangleNumbers.first { it.divisorsCount() > 500 }
     println(num)
 }
 
