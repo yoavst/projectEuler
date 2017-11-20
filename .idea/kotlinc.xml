@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="KotlinCommonCompilerArguments">
-    <option name="coroutinesWarn" value="false" />
-    <option name="coroutinesEnable" value="true" />
+    <option name="coroutinesState" value="enable" />
   </component>
 </project>

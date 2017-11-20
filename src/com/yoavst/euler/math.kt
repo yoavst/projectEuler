@@ -31,12 +31,15 @@ private fun Long.factorialNoCache() = factorialNoCacheFrom(1, 1)
 
 private fun Long.factorialNoCacheFrom(x: Int, result: Long) = (x..this).fold(result, Long::times)
 
-private val FactorialCache = generateLongArray(100, 1, 10::times)
+private val FactorialCache = generateLongArray(20, 1) { a, b ->
+    if (a == 0) 1 else a * b
+}
+
 fun Long.factorial(): Long {
-    if (this < FactorialCache.size)
-        return FactorialCache[this.toInt()]
+    return if (this < FactorialCache.size)
+        FactorialCache[this.toInt()]
     else
-        return factorialNoCacheFrom(FactorialCache.lastIndex + 1, FactorialCache.last())
+        factorialNoCacheFrom(FactorialCache.lastIndex + 1, FactorialCache.last())
 }
 //endregion
 

@@ -32,22 +32,21 @@ fun generatePrimes(upperLimit: Int): LongArray {
     return numbers.toLongArray()
 }
 
-private const val MaxPrimeCacheValue = 2_000_000L
+private const val MaxPrimeCacheValue = 10_000_000L
 private val PrimeCache by lazy { generatePrimes(MaxPrimeCacheValue.toInt()) }
 
 private fun Long.isPrimeNoCache(): Boolean {
-    if (this <= 1) return false
-    else if (this == 2L) return true
-    else if (this % 2 == 0L) return false
+    return when {
+        this <= 1 -> false
+        this == 2L -> true
+        this % 2 == 0L -> false
+        else -> (3..sqrt() step 2).none { this % it == 0L }
+    }
 
-    return (3..sqrt() step 2).none { this % it == 0L }
 }
 
 fun Long.isPrime(): Boolean {
-    if (this < MaxPrimeCacheValue)
-        return PrimeCache.binarySearch(this) >= 0
-    else
-        return isPrimeNoCache()
+    return if (this < MaxPrimeCacheValue) PrimeCache.binarySearch(this) >= 0 else isPrimeNoCache()
 }
 
 fun Int.isPrime() = toLong().isPrime()

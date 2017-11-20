@@ -125,10 +125,10 @@ fun problem8() {
     try {
         for (i in 1 until data.length) {
             val dropped = data[i - 1].toIntValue()
-            if (dropped == 0)
-                last = data.drop(i).take(13).map(Char::toIntValue).multiple()
+            last = if (dropped == 0)
+                data.drop(i).take(13).map(Char::toIntValue).multiple()
             else
-                last = last / dropped * data[i + 12].toIntValue()
+                last / dropped * data[i + 12].toIntValue()
             max = maxOf(last, max)
         }
     } catch (ignored: Exception) {

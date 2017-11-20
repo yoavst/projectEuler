@@ -37,10 +37,7 @@ fun problem11() {
     val Dimension = 20
 
     operator fun IntArray.get(x: Int, y: Int): Int {
-        if (y >= Dimension || x >= Dimension || y < 0 || x < 0)
-            return 0
-        else
-            return this[y * Dimension + x]
+        return if (y >= Dimension || x >= Dimension || y < 0 || x < 0) 0 else this[y * Dimension + x]
     }
 
     var max = 0L
@@ -212,15 +209,16 @@ fun problem13() {
 fun problem14() {
     val cache = IntArray(1_000_000)
     fun getSize(num: Long): Int {
-        if (num == 1L) return 0
-        else if (num < cache.size && cache[num.toInt()] != 0) {
-            return cache[num.toInt()]
-        } else {
-            val next = if (num.isEven()) num / 2 else 3 * num + 1
-            val nextSize = 1 + getSize(next)
-            if (num < cache.size)
-                cache[num.toInt()] = nextSize
-            return nextSize
+        return when {
+            num == 1L -> 0
+            num < cache.size && cache[num.toInt()] != 0 -> cache[num.toInt()]
+            else -> {
+                val next = if (num.isEven()) num / 2 else 3 * num + 1
+                val nextSize = 1 + getSize(next)
+                if (num < cache.size)
+                    cache[num.toInt()] = nextSize
+                nextSize
+            }
         }
     }
 
@@ -238,10 +236,7 @@ fun problem15() {
     val data = LongArray(Dimension * Dimension)
 
     operator fun LongArray.get(x: Int, y: Int): Long {
-        if (y >= Dimension || x >= Dimension || y < 0 || x < 0)
-            return 0
-        else
-            return this[y * Dimension + x]
+        return if (y >= Dimension || x >= Dimension || y < 0 || x < 0) 0 else this[y * Dimension + x]
     }
 
     operator fun LongArray.set(x: Int, y: Int, value: Long) {
